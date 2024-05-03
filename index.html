@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Candy Crush Discord Activity</title>
+  <title>Candy Crush Clone</title>
   <style>
     #game-board {
       display: flex;
       flex-wrap: wrap;
       width: 300px;
       height: 300px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
     .candy {
       width: 50px;
       height: 50px;
       border-radius: 50%;
+      box-sizing: border-box;
+      cursor: pointer;
     }
 
     .red {
@@ -74,9 +78,9 @@
         const candy = document.createElement("div");
         candy.className = "candy";
         candy.style.backgroundColor = getRandomColor();
+        candy.addEventListener("click", matchCandy);
         gameBoard.appendChild(candy);
       }
-      checkMatches();
     }
 
     // Get random color for candy
@@ -106,8 +110,15 @@
           matches.push(candy);
         }
       }
+      return matches;
+    }
+
+    // Match candy and update score
+    function matchCandy() {
+      const candies = document.getElementsByClassName("candy");
+      const matches = checkMatches();
       if (matches.length > 0) {
-        for (let i = 0; i < matches.length; i++) {
+       for (let i = 0; i < matches.length; i++) {
           matches[i].remove();
           scoreCount += 10;
           score.textContent = scoreCount;
