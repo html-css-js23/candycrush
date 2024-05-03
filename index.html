@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Candy Crush Discord Activity</title>
+  <style>
+    #game-board {
+      display: flex;
+      flex-wrap: wrap;
+      width: 300px;
+      height: 300px;
+    }
+
+    .candy {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .red {
+      background-color: red;
+    }
+
+    .blue {
+      background-color: blue;
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+
+    .purple {
+      background-color: purple;
+    }
+
+    .orange {
+      background-color: orange;
+    }
+
+    #score-board {
+      margin-top: 20px;
+    }
+
+    #start-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-board"></div>
+  <div id="score-board">
+    <p>Score: <span id="score">0</span></p>
+    <p>Level: <span id="level">1</span></p>
+  </div>
+  <button id="start-button">Start Game</button>
+  <script>
+    const gameBoard = document.getElementById("game-board");
+    const startButton = document.getElementById("start-button");
+    const score = document.getElementById("score");
+    const level = document.getElementById("level");
+
+    let scoreCount = 0;
+    let levelCount = 1;
+
+    // Generate game board grid with random candies
+    function generateBoard() {
+      gameBoard.innerHTML = "";
+      for (let i = 0; i < 9; i++) {
+        const candy = document.createElement("div");
+        candy.className = "candy";
+        candy.style.backgroundColor = getRandomColor();
+        gameBoard.appendChild(candy);
+      }
+      checkMatches();
+    }
+
+    // Get random color for candy
+    function getRandomColor() {
+      const colors = ["red", "blue", "green", "yellow", "purple", "orange"];
+      const randomIndex = Math.floor(Math.random() * colors.length);
+      return colors[randomIndex];
+    }
+
+    // Check for matches on the board
+    function checkMatches() {
+      const candies = document.getElementsByClassName("candy");
+      const matches = [];
+      for (let i = 0; i < candies.length; i++) {
+        const candy = candies[i];
+        const candyColor = candy.style.backgroundColor;
+        const left = i - 1;
+        const right = i + 1;
+        const top = i - 3;
+        const bottom = i + 3;
+        if (
+          (left >= 0 && candies[left].style.backgroundColor === candyColor) ||
+          (right <= candies.length - 1 && candies[right].style.backgroundColor === candyColor) ||
+          (top >= 0 && candies[top].style.backgroundColor === candyColor) ||
+          (bottom <= candies.length - 1 && candies[bottom].style.backgroundColor === candyColor)
+        ) {
+          matches.push(candy);
+        }
+      }
+      if (matches.length > 0) {
+        for (let i = 0; i < matches.length; i++) {
+          matches[i].remove();
+          scoreCount += 10;
+          score.textContent = scoreCount;
+          if (scoreCount >= 50 * levelCount) {
+            levelCount++;
+            level.textContent = levelCount;
+            generateBoard();
+          }
+        }
+      }
+    }
+
+    // Start game button event listener
+    startButton.addEventListener("click", generateBoard);
+  </script>
+</body>
+</html>
